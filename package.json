@@ -1,0 +1,19 @@
+{
+  "name": "print-server",
+  "version": "1.0.0",
+  "description": "A print server using escpos and express",
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "escpos": "^3.0.0-alpha.6",
+    "escpos-usb": "git@github.com:lsongdev/node-escpos.git",
+    "express": "^4.21.2",
+    "react-thermal-printer": "^0.19.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
