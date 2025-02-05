@@ -4,13 +4,20 @@
   "description": "A print server using escpos and express",
   "main": "index.js",
   "bin": "index.js",
+  "pkg": {
+    "targets": [
+      "node16-win-x64",
+      "node16-linux-x64",
+      "node16-macos-x64"
+    ],
+    "outputPath": "dist"
+  },
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
     "escpos": "^3.0.0-alpha.6",
     "express": "^4.21.2",
-    "react-thermal-printer": "^0.19.1",
     "usb": "^2.14.0"
   },
   "devDependencies": {
