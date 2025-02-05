@@ -727,13 +727,6 @@ escape-html@~1.0.3:
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
   integrity sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==
 
-"escpos-usb@git@github.com:lsongdev/node-escpos.git":
-  version "3.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/escpos-usb/-/escpos-usb-3.0.0-alpha.4.tgz#ed9953eff54b9b847a47406697c5401c8e37e234"
-  integrity sha512-SX/MlDZ0HEXFb4OZeUmXvA9hOkozU9IbWoxw4H7JbuQlVLZxBsL6bx/ZeReZlXViN2SyFJedIyNrFvVFu2Mpsw==
-  dependencies:
-    usb "*"
-
 escpos@^3.0.0-alpha.6:
   version "3.0.0-alpha.6"
   resolved "https://registry.yarnpkg.com/escpos/-/escpos-3.0.0-alpha.6.tgz#2044edc0c5000d34bf50ea77a59600581035ce05"
@@ -1889,7 +1882,7 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-usb@*:
+usb@^2.14.0:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/usb/-/usb-2.14.0.tgz#501f18c11b00c248d607ab6b05a8c7b50eb2f21a"
   integrity sha512-I3lzVOH21BsO6qPYvx1C7Ji08lbuM0qmsEtNGAphqlhNME5cz/vExY+jIXZl+HQIRybI/sTxdyLab5tALsL69w==

@@ -50,26 +50,22 @@ app.post("/print", (req, res) => {
     // Duzine-10 Tab               4.60
     // Qty: 2                      9.20
     // discount                    0.90
-    // HSN-GST(3004-12.0%)         1.10
     // amount                     10.30
     // Batch(Exp.)     LTA-4560B(09/26)
     // -----                        ------
     // Bandy Plus Tab             30.78
     // Qty: 2                     61.56
     // discount                    6.61
-    // HSN-GST(3004-12.0%)         7.39
     // amount                     68.95
     // Batch(Exp.)      ABA6X071(01/27)
     // -----                        ------
     // Momegoid-F Cream          185.00
     // Qty: 1                    185.00
     // discount                   17.80
-    // HSN-GST(1302-12.0%)        22.20
     // amount                    207.20
     // Batch(Exp.)      XE23IB06(06/26)
     // -----------------------------------
     // Items: 3
-    // Total GST: 36.27
     // Total: 338.56
     // You saved: 25.31
     // -----------------------------------
@@ -85,6 +81,7 @@ app.post("/print", (req, res) => {
     // Print the header
     printer
       .size(0.55, 0.55)
+      .flush()
       .feed()
       .font("a")
       .align("ct")
@@ -97,38 +94,47 @@ app.post("/print", (req, res) => {
       .feed();
     for (const item of orderItems) {
       printer
-      .size(0.5, 0.5)
-      .font("b")
-      .style("normal")
-      .tableCustom([
-        { text: item.name, align: "LEFT", width: 0.5 },
-        { text: item.price.toString(), align: "RIGHT", width: 0.5 }
-      ])
-      .tableCustom([
-        { text: `Qty: ${item.quantity}`, align: "LEFT", width: 0.5 },
-        { text: (item.price * item.quantity).toString(), align: "RIGHT", width: 0.5 }
-      ])
-      .tableCustom([
-        { text: "discount", align: "LEFT", width: 0.5 },
-        { text: item.discount.toString(), align: "RIGHT", width: 0.5 }
-      ])
-      .tableCustom([
-        { text: `HSN-GST(${item.hsn}-${item.gst}%)`, align: "LEFT", width: 0.5 },
-        { text: item.totalGst.toString(), align: "RIGHT", width: 0.5 }
-      ])
-      .tableCustom([
-        { text: "amount", align: "LEFT", width: 0.5 },
-        { text: item.totalPrice.toString(), align: "RIGHT", width: 0.5 }
-      ])
-      .text(`Batch(Exp.) ${item.batchNumber}(${item.expiryDate})`)
-      .lineSpace()
-      .feed();
+        .size(0.5, 0.5)
+        .flush()
+        .font("b")
+        .style("normal")
+        .tableCustom([
+          { text: item.name, align: "LEFT", width: 0.5 },
+          { text: item.price.toString(), align: "RIGHT", width: 0.5 },
+        ])
+        .tableCustom([
+          { text: `Qty: ${item.quantity}`, align: "LEFT", width: 0.5 },
+          {
+            text: (item.price * item.quantity).toString(),
+            align: "RIGHT",
+            width: 0.5,
+          },
+        ])
+        .tableCustom([
+          { text: "discount", align: "LEFT", width: 0.5 },
+          { text: item.discount.toString(), align: "RIGHT", width: 0.5 },
+        ])
+        .tableCustom([
+          { text: "amount", align: "LEFT", width: 0.5 },
+          { text: item.totalPrice.toString(), align: "RIGHT", width: 0.5 },
+        ])
+        .text(`Batch(Exp.) ${item.batchNumber}(${item.expiryDate})`)
+        .tableCustom([
+          { text: "Batch(Exp.)", align: "LEFT", width: 0.5 },
+          {
+            text: `${item.batchNumber}(${item.expiryDate})`,
+            align: "RIGHT",
+            width: 0.5,
+          },
+        ])
+        .lineSpace()
+        .feed();
     }
     printer
       .size(0.5, 0.5)
+      .flush()
       .drawLine()
       .text(`Items: ${orderItems.length}`)
-      .text(`Total GST: ${order.totalGst}`)
       .text(`Total: ${order.totalAmount}`)
       .text(`You saved: ${order.totalSaved}`)
       .text(`Paid by: ${order.paymentMode}`)
