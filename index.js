@@ -22,6 +22,20 @@ app.use((req, res, next) => {
   next();
 });
 
+app.options("/live", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.send();
+});
+
+app.get("/live", (req, res) => {
+  res.status(200).send();
+});
+
 app.options("/print", (req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -86,6 +100,7 @@ app.post("/print", (req, res) => {
       .font("a")
       .align("ct")
       .style("bu")
+      .text()
       .text("Jeevanadhar Generic Medicals")
       .text("GSTIN:36AAVFJ2067P1ZH")
       .text("RIMS General Hospital, Adilabad")
@@ -138,9 +153,6 @@ app.post("/print", (req, res) => {
       .text(`Total: ${order.totalAmount}`)
       .text(`You saved: ${order.totalSaved}`)
       .text(`Paid by: ${order.paymentMode}`)
-      .drawLine()
-      .text("Goods once sold cannot be taken back.")
-      .text("E.&O.E.Subject to Adilabad Jurisdiction")
       .drawLine()
       .text("Ayudha Foundation, Adilabad")
       .text("Donate blood, save life")
