@@ -114,7 +114,7 @@ app.post("/print", (req, res) => {
           printer
             .tableCustom([
               { text: item.name, align: "LEFT", width: 0.5 },
-              { text: `MRP: ₹${item.price.toString()}`, align: "RIGHT", width: 0.5 },
+              { text: `MRP: ${item.price.toString()}`, align: "RIGHT", width: 0.5 },
             ])
             .tableCustom([
               { text: `Qty: ${item.quantity}`, align: "LEFT", width: 0.5 },
