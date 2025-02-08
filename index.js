@@ -47,126 +47,156 @@ app.options("/print", (req, res) => {
 });
 
 app.post("/print", (req, res) => {
-  const { order, orderItems } = req.body;
-  device.open(async function (error) {
-    if (error) {
-      console.error("Open error:", error);
-      return;
-    }
-    // Template looks like this
-    //
-    // -----------------------------------
-    //    Jeevanadhar Generic Medicals
-    //       GSTIN:36AAVFJ2067P1ZH
-    //   RIMS General Hospital, Adilabad
-    //        16/01/2025 02:13PM
-    // -----------------------------------
-    // Duzine-10 Tab               4.60
-    // Qty: 2                      9.20
-    // discount                    0.90
-    // amount                     10.30
-    // Batch(Exp.)     LTA-4560B(09/26)
-    // -----                        ------
-    // Bandy Plus Tab             30.78
-    // Qty: 2                     61.56
-    // discount                    6.61
-    // amount                     68.95
-    // Batch(Exp.)      ABA6X071(01/27)
-    // -----                        ------
-    // Momegoid-F Cream          185.00
-    // Qty: 1                    185.00
-    // discount                   17.80
-    // amount                    207.20
-    // Batch(Exp.)      XE23IB06(06/26)
-    // -----------------------------------
-    // Items: 3
-    // Total: 338.56
-    // You saved: 25.31
-    // -----------------------------------
-    // Goods once sold cannot be taken back.
-    // E.&O.E.Subject to Adilabad Jurisdiction
-    // -----------------------------------
-    //    Ayudha Foundation, Adilabad
-    //     Donate blood, save life
-    // -----------------------------------
-    //
-    //
+  try {
+    const { order, orderItems } = req.body;
+    device.open(async function (error) {
+      if (error) {
+        console.error("Open error:", error);
+        return;
+      }
+      // Template looks like this
+      //
+      // -----------------------------------
+      //    Jeevanadhar Generic Medicals
+      //       GSTIN:36AAVFJ2067P1ZH
+      //   RIMS General Hospital, Adilabad
+      //        16/01/2025 02:13PM
+      // -----------------------------------
+      // Duzine-10 Tab               4.60
+      // Qty: 2                      9.20
+      // discount                    0.90
+      // amount                     10.30
+      // Batch(Exp.)     LTA-4560B(09/26)
+      // -----                        ------
+      // Bandy Plus Tab             30.78
+      // Qty: 2                     61.56
+      // discount                    6.61
+      // amount                     68.95
+      // Batch(Exp.)      ABA6X071(01/27)
+      // -----                        ------
+      // Momegoid-F Cream          185.00
+      // Qty: 1                    185.00
+      // discount                   17.80
+      // amount                    207.20
+      // Batch(Exp.)      XE23IB06(06/26)
+      // -----------------------------------
+      // Items: 3
+      // Total: 338.56
+      // You saved: 25.31
+      // -----------------------------------
+      // Goods once sold cannot be taken back.
+      // E.&O.E.Subject to Adilabad Jurisdiction
+      // -----------------------------------
+      //    Ayudha Foundation, Adilabad
+      //     Donate blood, save life
+      // -----------------------------------
+      //
+      //
 
-    // Print the header
-    printer
-      .size(0.55, 0.55)
-      .flush()
-      .feed()
-      .font("a")
-      .align("ct")
-      .style("bu")
-      .text()
-      .text("Jeevanadhar Generic Medicals")
-      .text("GSTIN:36AAVFJ2067P1ZH")
-      .text("RIMS General Hospital, Adilabad")
-      .text(order.dateTime)
-      .drawLine()
-      .feed();
-    for (const item of orderItems) {
-      printer
-        .size(0.5, 0.5)
-        .flush()
-        .font("b")
-        .style("normal")
-        .tableCustom([
-          { text: item.name, align: "LEFT", width: 0.5 },
-          { text: item.price.toString(), align: "RIGHT", width: 0.5 },
-        ])
-        .tableCustom([
-          { text: `Qty: ${item.quantity}`, align: "LEFT", width: 0.5 },
-          {
-            text: (item.price * item.quantity).toString(),
-            align: "RIGHT",
-            width: 0.5,
-          },
-        ])
-        .tableCustom([
-          { text: "discount", align: "LEFT", width: 0.5 },
-          { text: item.discount.toString(), align: "RIGHT", width: 0.5 },
-        ])
-        .tableCustom([
-          { text: "amount", align: "LEFT", width: 0.5 },
-          { text: item.totalPrice.toString(), align: "RIGHT", width: 0.5 },
-        ])
-        .text(`Batch(Exp.) ${item.batchNumber}(${item.expiryDate})`)
-        .tableCustom([
-          { text: "Batch(Exp.)", align: "LEFT", width: 0.5 },
-          {
-            text: `${item.batchNumber}(${item.expiryDate})`,
-            align: "RIGHT",
-            width: 0.5,
-          },
-        ])
-        .lineSpace()
-        .feed();
-    }
-    printer
-      .size(0.5, 0.5)
-      .flush()
-      .drawLine()
-      .text(`Items: ${orderItems.length}`)
-      .text(`Total: ${order.totalAmount}`)
-      .text(`You saved: ${order.totalSaved}`)
-      .text(`Paid by: ${order.paymentMode}`)
-      .drawLine()
-      .text("Ayudha Foundation, Adilabad")
-      .text("Donate blood, save life")
-      .drawLine()
-      .feed()
-      .cut()
-      .beep(1, 10)
-      .close(function (error) {
-        if (error) {
-          console.error("Close error:", error);
+      // Print the header
+      await new Promise((resolve) =>
+        printer
+          .feed()
+          .font("a")
+          .align("ct")
+          .drawLine()
+          .text("Jeevandhara Generic Medicals")
+          .text("GSTIN:36AAVFJ2067P1ZH")
+          .text("Composition Levy")
+          .text("RIMS General Hospital, Adilabad")
+          .text(order.dateTime)
+          .font("b")
+          .drawLine()
+          .flush(() => resolve())
+      );
+      for (const item of orderItems) {
+        await new Promise((resolve) =>
+          printer
+            .tableCustom([
+              { text: item.name, align: "LEFT", width: 0.5 },
+              { text: item.price.toString(), align: "RIGHT", width: 0.5 },
+            ])
+            .tableCustom([
+              { text: `Qty: ${item.quantity}`, align: "LEFT", width: 0.5 },
+              {
+                text: item.totalPrice.toString(),
+                align: "RIGHT",
+                width: 0.5,
+              },
+            ])
+            .tableCustom([
+              { text: "discount", align: "LEFT", width: 0.5 },
+              {
+                text: `${item.discountAmount.toString()}(${item.discount.toString()}%)`,
+                align: "RIGHT",
+                width: 0.5,
+              },
+            ])
+            .tableCustom([
+              { text: "amount", align: "LEFT", width: 0.5 },
+              { text: item.totalPrice.toString(), align: "RIGHT", width: 0.5 },
+            ])
+            .tableCustom([
+              { text: "Batch(Exp.)", align: "LEFT", width: 0.5 },
+              {
+                text: `${item.batchNumber}(${item.expiryDate})`,
+                align: "RIGHT",
+                width: 0.5,
+              },
+            ])
+            .lineSpace()
+            .feed()
+            .flush(function () {
+              resolve();
+            })
+        );
+      }
+      await new Promise((resolve) => {
+        if (orderItems.overallDiscount) {
+          printer
+            .drawLine()
+            .text("Overall Discount")
+            .text(`${orderItems.overallDiscount}`)
+            .drawLine()
+            .text(`Items: ${orderItems.length}`)
+            .text(`Total: ${order.totalAmount}`)
+            .text(`You saved: ${order.totalSaved}`)
+            .text(`Paid by: ${order.paymentMode}`)
+            .drawLine()
+            .text("Ayudha Foundation, Adilabad")
+            .text("Donate blood, save life")
+            .drawLine()
+            .feed()
+            .cut()
+            .beep(1, 10)
+            .close(function () {
+              resolve();
+            });
+        } else {
+          printer
+            .drawLine()
+            .text(`Items: ${orderItems.length}`)
+            .text(`Total: ${order.totalAmount}`)
+            .text(`You saved: ${order.totalSaved}`)
+            .text(`Paid by: ${order.paymentMode}`)
+            .drawLine()
+            .text("Ayudha Foundation, Adilabad")
+            .text("Donate blood, save life")
+            .drawLine()
+            .feed()
+            .cut()
+            .beep(1, 10)
+            .close(function () {
+              resolve();
+            });
         }
-        res.status(204).send();
       });
-  });
+
+      res.status(204).send();
+    });
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 app.listen(port, () => {
