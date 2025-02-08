@@ -152,11 +152,11 @@ app.post("/print", (req, res) => {
         );
       }
       await new Promise((resolve) => {
-        if (orderItems.overallDiscount) {
+        if (order.overallDiscount) {
           printer
             .drawLine()
             .text("Overall Discount")
-            .text(`${orderItems.overallDiscount}`)
+            .text(`${order.overallDiscount}`)
             .drawLine()
             .text(`Items: ${orderItems.length}`)
             .text(`Total: ${order.totalAmount}`)
