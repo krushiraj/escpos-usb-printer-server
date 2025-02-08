@@ -114,12 +114,12 @@ app.post("/print", (req, res) => {
           printer
             .tableCustom([
               { text: item.name, align: "LEFT", width: 0.5 },
-              { text: item.price.toString(), align: "RIGHT", width: 0.5 },
+              { text: `MRP: ₹${item.price.toString()}`, align: "RIGHT", width: 0.5 },
             ])
             .tableCustom([
               { text: `Qty: ${item.quantity}`, align: "LEFT", width: 0.5 },
               {
-                text: item.totalPrice.toString(),
+                text: item.totalBeforeDiscount.toString(),
                 align: "RIGHT",
                 width: 0.5,
               },
@@ -155,8 +155,8 @@ app.post("/print", (req, res) => {
         if (order.overallDiscount) {
           printer
             .drawLine()
-            .text("Overall Discount")
-            .text(`${order.overallDiscount}`)
+            .text(`Subtotal: ${order.subTotal}`)
+            .text(`Overall Discount: ${order.overallDiscount}`)
             .drawLine()
             .text(`Items: ${orderItems.length}`)
             .text(`Total: ${order.totalAmount}`)
