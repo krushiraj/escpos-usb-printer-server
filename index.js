@@ -155,8 +155,8 @@ app.post("/print", (req, res) => {
         if (order.overallDiscount) {
           printer
             .drawLine()
-            .text(`Subtotal: ${order.subTotal}`)
-            .text(`Overall Discount: ${order.overallDiscount}`)
+            .text(`Subtotal: ${order.totalBeforeDiscount}`)
+            .text(`Overall Discount: ${order.overallDiscountAmount}(${order.overallDiscount}%)`)
             .drawLine()
             .text(`Items: ${orderItems.length}`)
             .text(`Total: ${order.totalAmount}`)
@@ -176,6 +176,7 @@ app.post("/print", (req, res) => {
           printer
             .drawLine()
             .text(`Items: ${orderItems.length}`)
+            .text(`Subtotal: ${order.totalBeforeDiscount}`)
             .text(`Total: ${order.totalAmount}`)
             .text(`You saved: ${order.totalSaved}`)
             .text(`Paid by: ${order.paymentMode}`)
