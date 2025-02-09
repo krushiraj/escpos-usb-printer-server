@@ -152,14 +152,15 @@ app.post("/print", (req, res) => {
         );
       }
       await new Promise((resolve) => {
-        if (order.overallDiscount) {
+        if (parseFloat(order.overallDiscount) > 0) {
           printer
             .drawLine()
-            .text(`Subtotal: ${order.totalBeforeDiscount}`)
+            .text(`Total (MRP): ${order.totalBeforeDiscount}`)
+            .text(`Subtotal: ${order.totalBeforeOverallDiscount}`)
             .text(`Overall Discount: ${order.overallDiscountAmount}(${order.overallDiscount}%)`)
             .drawLine()
             .text(`Items: ${orderItems.length}`)
-            .text(`Total: ${order.totalAmount}`)
+            .text(`Total (to Pay): ${order.totalAmount}`)
             .text(`You saved: ${order.totalSaved}`)
             .text(`Paid by: ${order.paymentMode}`)
             .drawLine()
@@ -176,8 +177,8 @@ app.post("/print", (req, res) => {
           printer
             .drawLine()
             .text(`Items: ${orderItems.length}`)
-            .text(`Subtotal: ${order.totalBeforeDiscount}`)
-            .text(`Total: ${order.totalAmount}`)
+            .text(`Total (MRP): ${order.totalBeforeDiscount}`)
+            .text(`Total (to Pay): ${order.totalAmount}`)
             .text(`You saved: ${order.totalSaved}`)
             .text(`Paid by: ${order.paymentMode}`)
             .drawLine()
